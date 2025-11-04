@@ -1,0 +1,91 @@
+// Prisma Schema for KOSPI Monitoring Dashboard
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 일별 지표 데이터
+model Indicator {
+  id        String   @id @default(cuid())
+  date      DateTime @unique @db.Date
+
+  // 자동 수집 지표 (API/스크래핑)
+  foreignNetBuying    Float?   // 외국인 순매수 (억원)
+  usdKrwRate          Float?   // 원/달러 환율
+  kospiPbr            Float?   // 코스피 PBR
+  us10YearRate        Float?   // 미 10년물 금리 (%)
+  individualNetBuying Float?   // 개인 순매수 (억원)
+
+  // 수동 입력 지표
+  memoryPrice         Float?   // 메모리 가격 (USD)
+  semiconductorProfit Float?   // 반도체 영업이익 (조원)
+  valuationIndex      Int?     // 밸류업 지수 (0-5)
+  sp500Pbr            Float?   // S&P500 PBR
+  aiCapexGrowth       Float?   // AI CapEx 성장률 (%)
+
+  // 계산 필드
+  score               Int      @default(0)    // 종합 점수 (0-10)
+  scenario            String   @default("neutral") // bullish | bearish | neutral
+
+  // 개별 지표 신호 (계산용)
+  foreignNetBuyingSignal    String?  // 매수 | 매도
+  usdKrwRateSignal          String?  // 강세 | 약세
+  kospiPbrSignal            String?  // 저평가 | 정상 | 고평가
+  us10YearRateSignal        String?  // 고금리 | 완화
+  individualNetBuyingSignal String?  // 매수 | 매도
+  memoryPriceSignal         String?  // 상승 | 하락
+  semiconductorProfitSignal String?  // 호조 | 둔화
+  valuationIndexSignal      String?  // 진척 | 정체
+  sp500PbrSignal            String?  // 고평가 | 보통
+  aiCapexGrowthSignal       String?  // 확대 | 축소
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+}
+
+// 알림 조건 설정
+model Alert {
+  id        String   @id @default(cuid())
+  name      String   // 알림 이름
+  condition String   // 조건 (예: "score >= 8")
+  message   String   // 알림 메시지 템플릿
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 알림 발송 히스토리
+model AlertHistory {
+  id          String   @id @default(cuid())
+  alertId     String
+  triggeredAt DateTime
+  sentTo      String   // 이메일 주소
+  success     Boolean  @default(false)
+  errorMessage String? // 실패 시 에러 메시지
+
+  createdAt DateTime @default(now())
+
+  @@index([triggeredAt])
+}
+
+// 데이터 수집 로그
+model CollectionLog {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  indicator String   // 지표명
+  success   Boolean  // 수집 성공 여부
+  value     String?  // 수집된 값
+  error     String?  // 에러 메시지
+
+  createdAt DateTime @default(now())
+
+  @@index([date, indicator])
+}
