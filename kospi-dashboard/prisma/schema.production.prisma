@@ -1,18 +1,18 @@
-// Prisma Schema for KOSPI Monitoring Dashboard
+// Prisma Schema for KOSPI Monitoring Dashboard (PostgreSQL Production)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 // 일별 지표 데이터
 model Indicator {
   id        String   @id @default(cuid())
-  date      DateTime @unique
+  date      DateTime @unique @db.Date
 
   // 자동 수집 지표 (API/스크래핑)
   foreignNetBuying    Float?   // 외국인 순매수 (억원)
@@ -83,7 +83,7 @@ model AlertHistory {
 // 데이터 수집 로그
 model CollectionLog {
   id        String   @id @default(cuid())
-  date      DateTime
+  date      DateTime @db.Date
   indicator String   // 지표명
   success   Boolean  // 수집 성공 여부
   value     String?  // 수집된 값
