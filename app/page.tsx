@@ -49,19 +49,19 @@ export default async function HomePage() {
             ? `${(indicator.foreignNetBuying / 100000000).toFixed(1)}조원`
             : 'N/A',
           signal: indicator.foreignNetBuyingSignal,
-          impact: getImpactDirection(indicator.foreignNetBuyingSignal)
+          impact: getImpactDirection(indicator.foreignNetBuyingSignal ?? undefined)
         },
         {
           name: '원/달러 환율',
           value: indicator.usdKrwRate ? `${indicator.usdKrwRate.toFixed(0)}원` : 'N/A',
           signal: indicator.usdKrwRateSignal,
-          impact: getImpactDirection(indicator.usdKrwRateSignal)
+          impact: getImpactDirection(indicator.usdKrwRateSignal ?? undefined)
         },
         {
           name: '미 10년물 금리',
           value: indicator.us10YearRate ? `${indicator.us10YearRate.toFixed(2)}%` : 'N/A',
           signal: indicator.us10YearRateSignal,
-          impact: getImpactDirection(indicator.us10YearRateSignal)
+          impact: getImpactDirection(indicator.us10YearRateSignal ?? undefined)
         }
       ]
     },
@@ -72,7 +72,7 @@ export default async function HomePage() {
           name: '메모리 가격',
           value: indicator.memoryPrice ? `$${indicator.memoryPrice.toFixed(1)}` : 'N/A',
           signal: indicator.memoryPriceSignal,
-          impact: getImpactDirection(indicator.memoryPriceSignal)
+          impact: getImpactDirection(indicator.memoryPriceSignal ?? undefined)
         },
         {
           name: '반도체 영업이익',
@@ -80,19 +80,19 @@ export default async function HomePage() {
             ? `${indicator.semiconductorProfit.toFixed(1)}조원`
             : 'N/A',
           signal: indicator.semiconductorProfitSignal,
-          impact: getImpactDirection(indicator.semiconductorProfitSignal)
+          impact: getImpactDirection(indicator.semiconductorProfitSignal ?? undefined)
         },
         {
           name: '코스피 PBR',
           value: indicator.kospiPbr ? `${indicator.kospiPbr.toFixed(2)}배` : 'N/A',
           signal: indicator.kospiPbrSignal,
-          impact: getImpactDirection(indicator.kospiPbrSignal)
+          impact: getImpactDirection(indicator.kospiPbrSignal ?? undefined)
         },
         {
           name: 'S&P500 PBR',
           value: indicator.sp500Pbr ? `${indicator.sp500Pbr.toFixed(2)}배` : 'N/A',
           signal: indicator.sp500PbrSignal,
-          impact: getImpactDirection(indicator.sp500PbrSignal)
+          impact: getImpactDirection(indicator.sp500PbrSignal ?? undefined)
         }
       ]
     },
@@ -103,7 +103,7 @@ export default async function HomePage() {
           name: '밸류업 지수',
           value: indicator.valuationIndex ? `${indicator.valuationIndex}점` : 'N/A',
           signal: indicator.valuationIndexSignal,
-          impact: getImpactDirection(indicator.valuationIndexSignal)
+          impact: getImpactDirection(indicator.valuationIndexSignal ?? undefined)
         },
         {
           name: '개인 순매수',
@@ -111,13 +111,13 @@ export default async function HomePage() {
             ? `${(indicator.individualNetBuying / 100000000).toFixed(1)}조원`
             : 'N/A',
           signal: indicator.individualNetBuyingSignal,
-          impact: getImpactDirection(indicator.individualNetBuyingSignal)
+          impact: getImpactDirection(indicator.individualNetBuyingSignal ?? undefined)
         },
         {
           name: 'AI CapEx 성장률',
           value: indicator.aiCapexGrowth ? `${indicator.aiCapexGrowth.toFixed(1)}%` : 'N/A',
           signal: indicator.aiCapexGrowthSignal,
-          impact: getImpactDirection(indicator.aiCapexGrowthSignal)
+          impact: getImpactDirection(indicator.aiCapexGrowthSignal ?? undefined)
         }
       ]
     }
@@ -173,7 +173,7 @@ export default async function HomePage() {
                 <div
                   key={idx}
                   className={`flex justify-between items-center p-3 rounded ${getSignalColor(
-                    item.signal
+                    item.signal ?? undefined
                   )}`}
                 >
                   <div className="flex-1">
