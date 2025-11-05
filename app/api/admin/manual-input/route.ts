@@ -19,18 +19,19 @@ export async function POST(request: Request) {
     })
 
     // 전체 데이터 병합 (자동 + 수동)
+    // null을 undefined로 변환하여 타입 안정성 확보
     const fullData = {
-      foreignNetBuying: existing?.foreignNetBuying,
-      usdKrwRate: existing?.usdKrwRate,
-      kospiPbr: existing?.kospiPbr,
-      us10YearRate: existing?.us10YearRate,
-      individualNetBuying: existing?.individualNetBuying,
-      memoryPrice: memoryPrice !== undefined ? memoryPrice : existing?.memoryPrice,
+      foreignNetBuying: existing?.foreignNetBuying ?? undefined,
+      usdKrwRate: existing?.usdKrwRate ?? undefined,
+      kospiPbr: existing?.kospiPbr ?? undefined,
+      us10YearRate: existing?.us10YearRate ?? undefined,
+      individualNetBuying: existing?.individualNetBuying ?? undefined,
+      memoryPrice: memoryPrice !== undefined ? memoryPrice : (existing?.memoryPrice ?? undefined),
       semiconductorProfit:
-        semiconductorProfit !== undefined ? semiconductorProfit : existing?.semiconductorProfit,
-      valuationIndex: valuationIndex !== undefined ? valuationIndex : existing?.valuationIndex,
-      sp500Pbr: sp500Pbr !== undefined ? sp500Pbr : existing?.sp500Pbr,
-      aiCapexGrowth: aiCapexGrowth !== undefined ? aiCapexGrowth : existing?.aiCapexGrowth
+        semiconductorProfit !== undefined ? semiconductorProfit : (existing?.semiconductorProfit ?? undefined),
+      valuationIndex: valuationIndex !== undefined ? valuationIndex : (existing?.valuationIndex ?? undefined),
+      sp500Pbr: sp500Pbr !== undefined ? sp500Pbr : (existing?.sp500Pbr ?? undefined),
+      aiCapexGrowth: aiCapexGrowth !== undefined ? aiCapexGrowth : (existing?.aiCapexGrowth ?? undefined)
     }
 
     // 종합 점수 재계산
