@@ -2,25 +2,66 @@
 
 코스피 시장의 10대 핵심 지표를 자동으로 추적하고, 종합 점수를 통해 상승/하락 시나리오를 시각적으로 모니터링하는 웹 대시보드입니다.
 
-## 🚀 원클릭 배포
+## 🚀 Railway 간편 배포 (3분 완성)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fdataofmen%2Fkospi-dashboard)
+### ⚡ 빠른 배포 방법
 
-**배포 후 필수 설정**:
-1. PostgreSQL 데이터베이스 자동 추가됨
-2. 환경 변수 입력 (아래 값 복사&붙여넣기):
-   ```
-   FRED_API_KEY=22657b2b26b8b8a9641ea58fed9c6916
-   EXIM_API_KEY=bBFEqblxWAVHTs3FPp1CntgJ4mb5BeyJ
-   ADMIN_PASSWORD=kospi2025
-   RESEND_API_KEY=re_dRcXzEE6_12TraNctjd3ZBEFYcgPD3ZPS
-   ```
-3. `/admin` 접속하여 수동 데이터 입력 및 알림 설정
-4. Cron-job.org에서 매일 오전 9시 자동 수집 설정
+**1단계**: Railway 로그인
+- https://railway.app 접속 → GitHub 계정으로 로그인
+
+**2단계**: 이 저장소 배포
+- Railway 대시보드 → **"New Project"** 클릭
+- **"Deploy from GitHub repo"** 선택
+- `dataofmen/kospi-dashboard` 검색 및 선택
+- **"Deploy Now"** 클릭
+
+**3단계**: PostgreSQL 추가
+- 프로젝트에서 **"+ New"** → **"Database"** → **"Add PostgreSQL"**
+
+**4단계**: 환경 변수 설정
+프로젝트 → **"Variables"** 탭 → **Raw Editor** 활성화 → 아래 전체 복사&붙여넣기:
+
+```env
+FRED_API_KEY=22657b2b26b8b8a9641ea58fed9c6916
+EXIM_API_KEY=bBFEqblxWAVHTs3FPp1CntgJ4mb5BeyJ
+ADMIN_PASSWORD=kospi2025
+RESEND_API_KEY=re_dRcXzEE6_12TraNctjd3ZBEFYcgPD3ZPS
+RESEND_FROM_EMAIL=KOSPI Monitor <onboarding@resend.dev>
+NODE_ENV=production
+```
+
+**5단계**: 배포 완료 대기 (3분)
+- **Deployments** 탭에서 진행상황 확인
+- ✅ "Deployed" 상태 확인
+- **Settings** → **Domains**에서 생성된 URL 복사
+
+### ✅ 배포 후 설정
+
+**1. 관리자 접속**: `https://your-app.railway.app/admin` (비밀번호: `kospi2025`)
+
+**2. 수동 데이터 입력** (5개 지표):
+- 메모리 가격: `2.5` USD
+- 반도체 영업이익: `8.5` 조원
+- 밸류업 지수: `3` (0-5)
+- S&P500 PBR: `4.8`
+- AI CapEx 성장률: `35` %
+
+**3. 이메일 알림 설정**:
+- 관리자 → "알림 관리" → 이메일 추가 → 활성화
+
+**4. 첫 데이터 수집 테스트**:
+```bash
+curl https://your-app.railway.app/api/cron
+```
+
+**5. 자동 스케줄러 설정** (Cron-job.org):
+- URL: `https://your-app.railway.app/api/cron`
+- Schedule: `0 9 * * *` (매일 오전 9시)
+- Timezone: `Asia/Seoul`
 
 ---
 
-## 🚀 Railway 수동 배포 (5분 완성)
+## 🚀 로컬 개발 환경 설정
 
 ### 1단계: Railway 프로젝트 생성
 1. [Railway.app](https://railway.app) 로그인 (GitHub 계정 연동)
