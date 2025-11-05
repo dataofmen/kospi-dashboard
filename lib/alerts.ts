@@ -3,7 +3,14 @@ import { Resend } from 'resend'
 import { prisma } from './prisma'
 import type { Indicator } from '@prisma/client'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid build-time errors when env vars are missing
+let resend: Resend | null = null
+function getResendClient() {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resend
+}
 
 interface AlertCondition {
   type: 'score' | 'foreignNetBuying' | 'usdKrwRate' | 'kospiPbr' | 'us10YearRate'
@@ -102,7 +109,13 @@ async function sendAlertEmail(
   `
 
   try {
-    const { data, error } = await resend.emails.send({
+    const client = getResendClient()
+    if (!client) {
+      console.error('[Email] Resend client not available - check RESEND_API_KEY')
+      return { success: false, error: 'Resend client not configured' }
+    }
+
+    const { data, error } = await client.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'KOSPI Monitor <onboarding@resend.dev>',
       to: [toEmail],
       subject: `[KOSPI 알림] ${scenario} - 점수 ${indicator.score}/10`,
