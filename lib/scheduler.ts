@@ -34,13 +34,14 @@ export function startScheduler() {
       })
 
       // 전체 데이터 병합
+      // null을 undefined로 변환하여 타입 안정성 확보
       const fullData = {
         ...collectedData,
-        memoryPrice: existing?.memoryPrice,
-        semiconductorProfit: existing?.semiconductorProfit,
-        valuationIndex: existing?.valuationIndex,
-        sp500Pbr: existing?.sp500Pbr,
-        aiCapexGrowth: existing?.aiCapexGrowth
+        memoryPrice: existing?.memoryPrice ?? undefined,
+        semiconductorProfit: existing?.semiconductorProfit ?? undefined,
+        valuationIndex: existing?.valuationIndex ?? undefined,
+        sp500Pbr: existing?.sp500Pbr ?? undefined,
+        aiCapexGrowth: existing?.aiCapexGrowth ?? undefined
       }
 
       // 종합 점수 계산
@@ -95,13 +96,14 @@ export async function runCollectionNow() {
       where: { date: today }
     })
 
+    // null을 undefined로 변환하여 타입 안정성 확보
     const fullData = {
       ...collectedData,
-      memoryPrice: existing?.memoryPrice,
-      semiconductorProfit: existing?.semiconductorProfit,
-      valuationIndex: existing?.valuationIndex,
-      sp500Pbr: existing?.sp500Pbr,
-      aiCapexGrowth: existing?.aiCapexGrowth
+      memoryPrice: existing?.memoryPrice ?? undefined,
+      semiconductorProfit: existing?.semiconductorProfit ?? undefined,
+      valuationIndex: existing?.valuationIndex ?? undefined,
+      sp500Pbr: existing?.sp500Pbr ?? undefined,
+      aiCapexGrowth: existing?.aiCapexGrowth ?? undefined
     }
 
     const scoreResult = calculateScore(fullData)

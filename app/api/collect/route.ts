@@ -20,13 +20,14 @@ export async function POST() {
     })
 
     // 기존 수동 입력 데이터 보존
+    // null을 undefined로 변환하여 타입 안정성 확보
     const fullData = {
       ...collectedData,
-      memoryPrice: existing?.memoryPrice,
-      semiconductorProfit: existing?.semiconductorProfit,
-      valuationIndex: existing?.valuationIndex,
-      sp500Pbr: existing?.sp500Pbr,
-      aiCapexGrowth: existing?.aiCapexGrowth
+      memoryPrice: existing?.memoryPrice ?? undefined,
+      semiconductorProfit: existing?.semiconductorProfit ?? undefined,
+      valuationIndex: existing?.valuationIndex ?? undefined,
+      sp500Pbr: existing?.sp500Pbr ?? undefined,
+      aiCapexGrowth: existing?.aiCapexGrowth ?? undefined
     }
 
     // 종합 점수 계산
