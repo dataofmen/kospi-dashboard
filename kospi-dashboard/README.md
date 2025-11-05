@@ -2,14 +2,54 @@
 
 코스피 시장의 10대 핵심 지표를 자동으로 추적하고, 종합 점수를 통해 상승/하락 시나리오를 시각적으로 모니터링하는 웹 대시보드입니다.
 
-## 🚀 원클릭 배포
+## 🚀 Railway 배포 (5분 완성)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/kospi-dashboard?referralCode=dataofmen)
+### 1단계: Railway 프로젝트 생성
+1. [Railway.app](https://railway.app) 로그인 (GitHub 계정 연동)
+2. **"New Project"** 클릭
+3. **"Deploy from GitHub repo"** 선택
+4. `dataofmen/kospi-dashboard` 저장소 선택
 
-**배포 후 설정 필요**:
-1. PostgreSQL 데이터베이스 자동 추가됨
-2. 환경 변수 설정 (FRED_API_KEY, EXIM_API_KEY, RESEND_API_KEY, ADMIN_PASSWORD)
-3. `/admin` 접속하여 수동 데이터 입력 및 알림 설정
+### 2단계: PostgreSQL 데이터베이스 추가
+1. 프로젝트 화면에서 **"+ New"** 버튼 클릭
+2. **"Database"** → **"Add PostgreSQL"** 선택
+3. Railway가 자동으로 `DATABASE_URL` 환경변수 연결
+
+### 3단계: 환경 변수 설정
+프로젝트 → **"Variables"** 탭에서 아래 변수 추가:
+
+```env
+FRED_API_KEY=22657b2b26b8b8a9641ea58fed9c6916
+EXIM_API_KEY=bBFEqblxWAVHTs3FPp1CntgJ4mb5BeyJ
+ADMIN_PASSWORD=kospi2025
+RESEND_API_KEY=re_dRcXzEE6_12TraNctjd3ZBEFYcgPD3ZPS
+RESEND_FROM_EMAIL=KOSPI Monitor <onboarding@resend.dev>
+NODE_ENV=production
+```
+
+### 4단계: 배포 완료 대기
+- Railway가 자동으로 빌드 및 배포 (약 3-5분)
+- 배포 완료 후 생성된 URL 확인 (예: `https://kospi-dashboard-production.railway.app`)
+
+### 5단계: 관리자 설정
+1. `https://your-app.railway.app/admin` 접속 (비밀번호: `kospi2025`)
+2. 수동 데이터 입력 (메모리 가격, 반도체 이익, 밸류업 지수 등)
+3. **"알림 관리"** 버튼 클릭 → 이메일 주소 추가
+
+### 6단계: 자동 수집 스케줄러 설정
+**옵션 1: Cron-job.org (추천)**
+1. [Cron-job.org](https://cron-job.org) 무료 가입
+2. "Create cronjob" 클릭
+3. URL: `https://your-app.railway.app/api/cron`
+4. Schedule: `0 9 * * *` (매일 오전 9시)
+5. Timezone: `Asia/Seoul`
+
+**옵션 2: GitHub Actions**
+- 저장소에 `.github/workflows/daily-collect.yml` 생성 (자세한 내용은 `RAILWAY_DEPLOY_GUIDE.md` 참조)
+
+---
+
+✅ **배포 완료!** 이제 매일 오전 9시마다 자동으로 데이터가 수집되고, 알림 조건 충족 시 이메일이 발송됩니다.
 
 ## 🚀 빠른 시작
 
