@@ -153,7 +153,7 @@ export async function checkAndSendAlerts(indicator: Indicator) {
       data: {
         alertId: alert.id,
         indicatorId: indicator.id,
-        conditionsMet: triggeredConditions.map((c) => c.message),
+        conditionsMet: JSON.stringify(triggeredConditions.map((c) => c.message)),
         emailSent: result.success,
         errorMessage: result.success ? null : JSON.stringify(result.error)
       }
