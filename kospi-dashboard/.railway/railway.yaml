@@ -1,0 +1,19 @@
+# Railway Configuration
+# This file enables automatic deployment from GitHub
+
+build:
+  builder: NIXPACKS
+  buildCommand: npm install && npx prisma generate && npm run build
+
+deploy:
+  startCommand: npx prisma migrate deploy && npm run start
+  restartPolicyType: ON_FAILURE
+  restartPolicyMaxRetries: 10
+  healthcheckPath: /
+  healthcheckTimeout: 100
+
+# Environment variable groups
+environments:
+  production:
+    variables:
+      NODE_ENV: production

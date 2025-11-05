@@ -2,6 +2,15 @@
 
 코스피 시장의 10대 핵심 지표를 자동으로 추적하고, 종합 점수를 통해 상승/하락 시나리오를 시각적으로 모니터링하는 웹 대시보드입니다.
 
+## 🚀 원클릭 배포
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/kospi-dashboard?referralCode=dataofmen)
+
+**배포 후 설정 필요**:
+1. PostgreSQL 데이터베이스 자동 추가됨
+2. 환경 변수 설정 (FRED_API_KEY, EXIM_API_KEY, RESEND_API_KEY, ADMIN_PASSWORD)
+3. `/admin` 접속하여 수동 데이터 입력 및 알림 설정
+
 ## 🚀 빠른 시작
 
 ### 1. 의존성 설치
