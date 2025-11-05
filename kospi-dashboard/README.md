@@ -2,7 +2,25 @@
 
 코스피 시장의 10대 핵심 지표를 자동으로 추적하고, 종합 점수를 통해 상승/하락 시나리오를 시각적으로 모니터링하는 웹 대시보드입니다.
 
-## 🚀 Railway 배포 (5분 완성)
+## 🚀 원클릭 배포
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fdataofmen%2Fkospi-dashboard)
+
+**배포 후 필수 설정**:
+1. PostgreSQL 데이터베이스 자동 추가됨
+2. 환경 변수 입력 (아래 값 복사&붙여넣기):
+   ```
+   FRED_API_KEY=22657b2b26b8b8a9641ea58fed9c6916
+   EXIM_API_KEY=bBFEqblxWAVHTs3FPp1CntgJ4mb5BeyJ
+   ADMIN_PASSWORD=kospi2025
+   RESEND_API_KEY=re_dRcXzEE6_12TraNctjd3ZBEFYcgPD3ZPS
+   ```
+3. `/admin` 접속하여 수동 데이터 입력 및 알림 설정
+4. Cron-job.org에서 매일 오전 9시 자동 수집 설정
+
+---
+
+## 🚀 Railway 수동 배포 (5분 완성)
 
 ### 1단계: Railway 프로젝트 생성
 1. [Railway.app](https://railway.app) 로그인 (GitHub 계정 연동)
