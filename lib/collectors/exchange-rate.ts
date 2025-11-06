@@ -1,5 +1,6 @@
 // 원/달러 환율 수집 (한국수출입은행 API)
 import axios, { AxiosError } from 'axios'
+import https from 'https'
 import type { CollectorResult } from './types'
 
 // 재시도 헬퍼 함수
@@ -67,9 +68,10 @@ export async function collectUsdKrwRate(): Promise<CollectorResult> {
                 Accept: 'application/json, text/plain, */*',
                 'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
               },
-              // Keep-Alive 연결 방지
-              httpAgent: undefined,
-              httpsAgent: undefined
+              // SSL 인증서 검증 비활성화 (한국수출입은행 API의 인증서 문제 우회)
+              httpsAgent: new https.Agent({
+                rejectUnauthorized: false
+              })
             }),
           2, // 2번 재시도
           1000 // 1초 지연

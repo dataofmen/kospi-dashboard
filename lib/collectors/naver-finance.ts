@@ -1,6 +1,7 @@
 // 네이버 금융 데이터 수집 (웹 스크래핑)
 import axios from 'axios'
 import * as cheerio from 'cheerio'
+import iconv from 'iconv-lite'
 import type { CollectorResult } from './types'
 
 // 외국인 순매수
@@ -100,7 +101,7 @@ export async function collectKospiPbr(): Promise<CollectorResult> {
   try {
     const url = 'https://finance.naver.com/sise/sise_index.nhn?code=KOSPI'
 
-    const { data } = await axios.get(url, {
+    const response = await axios.get(url, {
       timeout: 15000,
       headers: {
         'User-Agent':
@@ -110,10 +111,13 @@ export async function collectKospiPbr(): Promise<CollectorResult> {
         'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
         'Cache-Control': 'no-cache',
         Pragma: 'no-cache'
-      }
+      },
+      responseType: 'arraybuffer'
     })
 
-    const $ = cheerio.load(data)
+    // EUC-KR 인코딩을 UTF-8로 변환
+    const decodedData = iconv.decode(Buffer.from(response.data), 'EUC-KR')
+    const $ = cheerio.load(decodedData)
 
     // PBR 값 찾기 - 여러 셀렉터 시도
     let pbr: number | null = null
@@ -160,7 +164,7 @@ export async function collectKospiPbr(): Promise<CollectorResult> {
     }
 
     if (pbr === null || isNaN(pbr)) {
-      console.error('[KOSPI PBR] HTML structure:', data.substring(0, 500))
+      console.error('[KOSPI PBR] HTML structure:', decodedData.substring(0, 500))
       throw new Error('PBR value not found or invalid')
     }
 
