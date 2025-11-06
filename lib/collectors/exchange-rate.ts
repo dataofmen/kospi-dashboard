@@ -2,6 +2,7 @@
 import axios, { AxiosError } from 'axios'
 import https from 'https'
 import type { CollectorResult } from './types'
+import { collectUsdKrwRateAlternative } from './exchange-rate-alternative'
 
 // 재시도 헬퍼 함수
 async function retryRequest<T>(
@@ -33,14 +34,22 @@ async function retryRequest<T>(
 }
 
 export async function collectUsdKrwRate(): Promise<CollectorResult> {
+  // 먼저 대체 API 시도 (더 안정적)
+  console.log('[Exchange Rate] Trying alternative API first...')
+  const alternativeResult = await collectUsdKrwRateAlternative()
+
+  if (alternativeResult.success) {
+    return alternativeResult
+  }
+
+  console.log('[Exchange Rate] Alternative API failed, trying EXIM API...')
+
   try {
     const apiKey = process.env.EXIM_API_KEY
 
     if (!apiKey) {
-      return {
-        success: false,
-        error: 'EXIM_API_KEY not configured'
-      }
+      console.warn('[Exchange Rate] EXIM_API_KEY not configured, using alternative API only')
+      return alternativeResult // 대체 API 결과 반환 (실패하더라도)
     }
 
     // 오늘 날짜로 시도, 실패하면 어제 날짜로 재시도

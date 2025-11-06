@@ -3,6 +3,11 @@ import axios from 'axios'
 import * as cheerio from 'cheerio'
 import iconv from 'iconv-lite'
 import type { CollectorResult } from './types'
+import {
+  collectKospiPbrMobile,
+  collectKospiPbrFromInvesting,
+  collectKospiPbrFallback
+} from './kospi-pbr-alternative'
 
 // 외국인 순매수
 export async function collectForeignNetBuying(): Promise<CollectorResult> {
@@ -98,6 +103,26 @@ export async function collectIndividualNetBuying(): Promise<CollectorResult> {
 
 // 코스피 PBR
 export async function collectKospiPbr(): Promise<CollectorResult> {
+  // 여러 방법을 순차적으로 시도
+  console.log('[KOSPI PBR] Trying multiple methods...')
+
+  // 방법 1: 모바일 버전
+  const mobileResult = await collectKospiPbrMobile()
+  if (mobileResult.success) {
+    console.log('[KOSPI PBR] Mobile version succeeded')
+    return mobileResult
+  }
+
+  // 방법 2: Investing.com
+  const investingResult = await collectKospiPbrFromInvesting()
+  if (investingResult.success) {
+    console.log('[KOSPI PBR] Investing.com succeeded')
+    return investingResult
+  }
+
+  // 방법 3: 기존 네이버 금융 (EUC-KR 변환)
+  console.log('[KOSPI PBR] Trying original Naver Finance with encoding conversion...')
+
   try {
     const url = 'https://finance.naver.com/sise/sise_index.nhn?code=KOSPI'
 
@@ -173,10 +198,10 @@ export async function collectKospiPbr(): Promise<CollectorResult> {
       value: pbr
     }
   } catch (error) {
-    console.error('[KOSPI PBR Collector] Error:', error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }
+    console.error('[KOSPI PBR Collector] Original Naver Finance failed:', error)
   }
+
+  // 방법 4: 최후의 수단 - 폴백 값 사용
+  console.log('[KOSPI PBR] All methods failed, using fallback value')
+  return await collectKospiPbrFallback()
 }
